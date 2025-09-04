@@ -1,13 +1,13 @@
 package com.example.orgs.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orgs.R
-import com.example.orgs.module.Produto
+import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
-import java.math.BigDecimal
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,13 +16,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.adapter = ListaProdutosAdapter(
-            this, listOf(
-                Produto(nome = "teste", descricao = "teste desc", valor = BigDecimal("19.99")),
-                Produto(nome = "teste", descricao = "teste desc", valor = BigDecimal("19.99"))
-            ),
-        )
-        recyclerView.layoutManager = LinearLayoutManager(this)
     }
+
+    override fun onResume() {
+        super.onResume()
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val dao = ProdutosDao()
+
+        recyclerView.adapter = ListaProdutosAdapter(this, dao.buscaTodos())
+
+        val fab = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        fab.setOnClickListener {
+            val intent = Intent(this, FormularioProdutoActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
 }

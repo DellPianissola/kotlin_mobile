@@ -1,11 +1,11 @@
 package com.example.orgs.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.R
+import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.module.Produto
 import java.math.BigDecimal
 
@@ -27,7 +27,9 @@ class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario
                 BigDecimal(valorEmtexto)
             }
 
-            Produto(nome, descricao, valor)
+            val produtoNovo = Produto(nome, descricao, valor)
+
+            ProdutosDao().adiciona(produtoNovo)
         }
     }
 }
