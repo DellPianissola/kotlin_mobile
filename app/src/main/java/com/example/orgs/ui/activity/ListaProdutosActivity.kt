@@ -14,6 +14,9 @@ class ListaProdutosActivity : AppCompatActivity(R.layout.activity_list_produtos)
 
     private val dao = ProdutosDao()
     private val adapter = ListaProdutosAdapter(this, dao.buscaTodos())
+//    private val binding by lazy {
+//        ActivityListaProdutosActivityBinding.inflate()
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +30,12 @@ class ListaProdutosActivity : AppCompatActivity(R.layout.activity_list_produtos)
     }
 
     private fun configuraRecylcerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = findViewById<RecyclerView>(R.id.activity_lista_produto_recyclerView)
         recyclerView.adapter = adapter
     }
 
     private fun configuraFab() {
-        val fab = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val fab = findViewById<FloatingActionButton>(R.id.activity_lista_produto_fab)
         fab.setOnClickListener {
             vai_para_formulario_produto()
         }
