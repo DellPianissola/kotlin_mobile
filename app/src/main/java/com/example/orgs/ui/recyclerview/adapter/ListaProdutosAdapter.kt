@@ -10,10 +10,11 @@ import com.example.orgs.R
 import com.example.orgs.module.Produto
 
 class ListaProdutosAdapter(
-    private val context: Context,
-    private val produtos: List<Produto>
+    private val context: Context, produtos: List<Produto>
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
-    
+
+    private val produtos = produtos.toMutableList()
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun vincule(produto: Produto) {
             val nome = itemView.findViewById<TextView>(R.id.nome)
@@ -39,5 +40,9 @@ class ListaProdutosAdapter(
     }
 
     override fun getItemCount(): Int = produtos.size
-
+    fun atualiza(produtos: List<Produto>) {
+        this.produtos.clear()
+        this.produtos.addAll(produtos)
+        notifyDataSetChanged()
+    }
 }
