@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="?attr/actionBarSize">
 
     <TextView
         android:id="@+id/produto_item_nome"
@@ -54,7 +55,7 @@
         app:layout_constraintEnd_toStartOf="@+id/produto_item_nome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/Mídia"
+        app:srcCompat="@drawable/midia"
         tools:layout_editor_absoluteY="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
