@@ -17,6 +17,8 @@ class ListaProdutosActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
+
 
         // inflando o layout com binding
         binding = ActivityListProdutosBinding.inflate(layoutInflater)

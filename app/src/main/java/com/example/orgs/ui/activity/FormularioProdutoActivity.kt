@@ -12,6 +12,7 @@ import java.math.BigDecimal
 class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario_produto) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         configuraBotaoSalvar()
     }
 

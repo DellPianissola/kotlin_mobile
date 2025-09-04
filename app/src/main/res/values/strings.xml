@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Orgs</string>
     <string name="title_activity_formulario_produto">FormularioProdutoActivity</string>
+    <string name="produto_imagem">Imagem do produto</string>
+    <string name="adicionar_produto">Adicionar produto</string>
+    <string name="produto_nome">Nome</string>
+    <string name="produto_descricao">Descrição</string>
+    <string name="produto_valor">Valor</string>
+    <string name="salvar">Salvar</string>
 </resources>
