@@ -68,17 +68,44 @@
                 tools:text="19.99" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Preview da imagem -->
+        <ImageView
+            android:id="@+id/activity_formulario_produto_imagem_preview"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/produto_imagem"
+            android:background="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/layout_valor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Botão Selecionar Foto -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/activity_formulario_produto_botao_selecionar_foto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Selecionar Foto"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button"
+            app:cornerRadius="12dp"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_produto_imagem_preview"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <!-- Botão Salvar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/activity_formulario_produto_botao_salvar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:text="@string/salvar"
             android:textAllCaps="false"
             style="@style/Widget.MaterialComponents.Button"
             app:cornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/layout_valor"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_produto_botao_selecionar_foto"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

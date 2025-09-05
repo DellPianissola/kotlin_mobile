@@ -1,5 +1,6 @@
 package com.example.orgs.ui.recyclerview.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,18 +14,17 @@ class ListaProdutosAdapter :
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Produto>() {
-
-            // Agora usamos o ID como identidade
             override fun areItemsTheSame(oldItem: Produto, newItem: Produto): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            // Conteúdo igual? Compare campo a campo (id não conta, porque não muda)
             override fun areContentsTheSame(oldItem: Produto, newItem: Produto): Boolean {
                 val valorIgual = oldItem.valor.compareTo(newItem.valor) == 0
+                val imagemIgual = oldItem.imagemUri == newItem.imagemUri
                 return oldItem.nome == newItem.nome &&
                         oldItem.descricao == newItem.descricao &&
-                        valorIgual
+                        valorIgual &&
+                        imagemIgual
             }
         }
     }
@@ -36,6 +36,13 @@ class ListaProdutosAdapter :
             produtoItemNome.text = produto.nome
             produtoItemDescricao.text = produto.descricao
             produtoItemValor.text = produto.valor.toPlainString()
+
+            // Exibe a imagem se tiver
+            if (!produto.imagemUri.isNullOrEmpty()) {
+                produtoItemImageView.setImageURI(Uri.parse(produto.imagemUri))
+            } else {
+                produtoItemImageView.setImageResource(android.R.color.transparent)
+            }
         }
     }
 
@@ -52,6 +59,5 @@ class ListaProdutosAdapter :
         holder.vincula(getItem(position))
     }
 
-    // API parecida com antes, mas aproveita o ListAdapter
     fun atualiza(novosProdutos: List<Produto>) = submitList(novosProdutos.toList())
 }
