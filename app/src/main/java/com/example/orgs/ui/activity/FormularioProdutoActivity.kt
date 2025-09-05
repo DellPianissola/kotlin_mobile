@@ -30,6 +30,6 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val valor = activityFormularioProdutoValor.text.toString()
             .toBigDecimalOrNull() ?: BigDecimal.ZERO
 
-        Produto(nome, descricao, valor)
+        Produto(nome = nome, descricao = descricao, valor = valor)
     }
 }

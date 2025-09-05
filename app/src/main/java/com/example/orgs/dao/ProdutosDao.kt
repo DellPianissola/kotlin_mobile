@@ -8,7 +8,7 @@ class ProdutosDao {
         produtos.add(produto)
     }
 
-    fun buscaTodos() : List<Produto> {
+    fun buscaTodos(): List<Produto> {
         return produtos.toList()
     }
 

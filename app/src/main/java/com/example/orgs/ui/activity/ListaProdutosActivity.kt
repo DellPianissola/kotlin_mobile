@@ -10,7 +10,7 @@ import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 class ListaProdutosActivity : AppCompatActivity() {
 
     private val dao by lazy { ProdutosDao() }
-    private val adapter by lazy { ListaProdutosAdapter(this, dao.buscaTodos()) }
+    private val adapter by lazy { ListaProdutosAdapter() }
     private val binding by lazy { ActivityListProdutosBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
