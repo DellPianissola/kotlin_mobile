@@ -9,23 +9,17 @@ import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
-    private val dao = ProdutosDao()
-    private val adapter = ListaProdutosAdapter(this, dao.buscaTodos())
-
-    // inicialização do view binding
-    private lateinit var binding: ActivityListProdutosBinding
+    private val dao by lazy { ProdutosDao() }
+    private val adapter by lazy { ListaProdutosAdapter(this, dao.buscaTodos()) }
+    private val binding by lazy { ActivityListProdutosBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-
-
-        // inflando o layout com binding
-        binding = ActivityListProdutosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        configuraRecyclerView()
-        configuraFab()
+        binding.activityListaProdutoRecyclerView.adapter = adapter
+        binding.activityListaProdutoFab.setOnClickListener { vaiParaFormularioProduto() }
     }
 
     override fun onResume() {
@@ -33,18 +27,7 @@ class ListaProdutosActivity : AppCompatActivity() {
         adapter.atualiza(dao.buscaTodos())
     }
 
-    private fun configuraRecyclerView() {
-        binding.activityListaProdutoRecyclerView.adapter = adapter
-    }
-
-    private fun configuraFab() {
-        binding.activityListaProdutoFab.setOnClickListener {
-            vaiParaFormularioProduto()
-        }
-    }
-
     private fun vaiParaFormularioProduto() {
-        val intent = Intent(this, FormularioProdutoActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, FormularioProdutoActivity::class.java))
     }
 }
