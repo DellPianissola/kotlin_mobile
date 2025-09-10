@@ -11,6 +11,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.orgs.R
 import java.io.File
@@ -31,38 +32,45 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         setContentView(R.layout.activity_camera)
 
-        val previewView = findViewById<androidx.camera.view.PreviewView>(R.id.CameraPreview)
+        val previewView = findViewById<PreviewView>(R.id.CameraPreview)
         val closeButton = findViewById<ImageButton>(R.id.closeCameraButton)
+        val captureButton = findViewById<ImageButton>(R.id.captureButton)
 
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        // Inicia o preview da câmera
         startCamera(previewView)
 
-        // Fecha sem salvar
+        // Botão de capturar
+        captureButton.setOnClickListener {
+            takePhoto()
+        }
+
+        // Botão de fechar
         closeButton.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
-
-        // Se quiser: adicionar botão de captura aqui
-        // Exemplo: findViewById<ImageButton>(R.id.takePhotoButton).setOnClickListener { takePhoto() }
     }
 
-    private fun startCamera(previewView: androidx.camera.view.PreviewView) {
+    private fun startCamera(previewView: PreviewView) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
-            }
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
 
-            imageCapture = ImageCapture.Builder().build()
+            imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .build()
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
