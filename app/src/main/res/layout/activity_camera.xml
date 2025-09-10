@@ -48,7 +48,7 @@
             android:visibility="gone"
             android:layout_margin="8dp"
             android:background="@drawable/round_button_background"
-            android:src="@drawable/ic_replay"
+            android:src="@android:drawable/ic_menu_revert"
             android:contentDescription="@string/retake" />
 
         <ImageButton
@@ -57,7 +57,7 @@
             android:layout_height="80dp"
             android:layout_margin="8dp"
             android:background="@drawable/round_button_background"
-            android:src="@drawable/ic_camera"
+            android:src="@android:drawable/ic_menu_camera"
             android:contentDescription="@string/capture" />
 
         <ImageButton
@@ -67,7 +67,7 @@
             android:visibility="gone"
             android:layout_margin="8dp"
             android:background="@drawable/round_button_background"
-            android:src="@drawable/ic_check"
+            android:src="@android:drawable/checkbox_on_background"
             android:contentDescription="@string/confirm" />
     </LinearLayout>
 

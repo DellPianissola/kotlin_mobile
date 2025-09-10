@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.databinding.ActivityFormularioProdutoBinding
 import com.example.orgs.module.Produto
-import java.io.File
 import java.math.BigDecimal
 
 
