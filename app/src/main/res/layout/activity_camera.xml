@@ -28,7 +28,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="@drawable/round_button_background"
-        android:src="@drawable/ic_close"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:contentDescription="@string/close" />
 
     <!-- Controles (retake | capture | confirm) alinhados na parte inferior -->
@@ -67,7 +67,7 @@
             android:visibility="gone"
             android:layout_margin="8dp"
             android:background="@drawable/round_button_background"
-            android:src="@android:drawable/checkbox_on_background"
+            android:src="@android:drawable/ic_menu_save"
             android:contentDescription="@string/confirm" />
     </LinearLayout>
 
