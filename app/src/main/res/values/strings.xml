@@ -7,4 +7,5 @@
     <string name="produto_descricao">Descrição</string>
     <string name="produto_valor">Valor</string>
     <string name="salvar">Salvar</string>
+    <string name="close">Close</string>
 </resources>
