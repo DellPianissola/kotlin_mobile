@@ -5,13 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Preview da câmera -->
+    <!-- Preview em tempo real -->
     <androidx.camera.view.PreviewView
         android:id="@+id/CameraPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Botão fechar -->
+    <!-- Preview da foto capturada (inicialmente GONE) -->
+    <ImageView
+        android:id="@+id/previewImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <!-- Botão fechar (topo direita) -->
     <ImageButton
         android:id="@+id/closeCameraButton"
         android:layout_width="48dp"
@@ -19,20 +27,48 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:contentDescription="@string/close"
         android:background="@drawable/round_button_background"
-        android:src="@drawable/prohibited"/>
+        android:src="@drawable/ic_close"
+        android:contentDescription="@string/close" />
 
-    <!-- Botão de captura (centralizado embaixo) -->
-    <ImageButton
-        android:id="@+id/captureButton"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+    <!-- Controles (retake | capture | confirm) alinhados na parte inferior -->
+    <LinearLayout
+        android:id="@+id/controlsLayout"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/round_button_background"
-        android:src="@drawable/ic_camera"
-        android:contentDescription="@string/take_photo"/>
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/retakeButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:visibility="gone"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_button_background"
+            android:src="@drawable/ic_replay"
+            android:contentDescription="@string/retake" />
+
+        <ImageButton
+            android:id="@+id/captureButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_button_background"
+            android:src="@drawable/ic_camera"
+            android:contentDescription="@string/capture" />
+
+        <ImageButton
+            android:id="@+id/confirmButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:visibility="gone"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_button_background"
+            android:src="@drawable/ic_check"
+            android:contentDescription="@string/confirm" />
+    </LinearLayout>
 
 </RelativeLayout>

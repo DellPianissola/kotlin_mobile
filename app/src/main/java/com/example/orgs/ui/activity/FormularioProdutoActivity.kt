@@ -19,15 +19,15 @@ class FormularioProdutoActivity : AppCompatActivity() {
     private val dao = ProdutosDao()
     private var imagemUri: String? = null
 
-    // Launcher moderno para abrir a CameraActivity
+    // dentro da Activity (propriedade)
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val uri = result.data?.getStringExtra(CameraActivity.RESULT_URI)
-            uri?.let {
+            val uriString = result.data?.getStringExtra(CameraActivity.RESULT_URI)
+            uriString?.let {
                 imagemUri = it
-                binding.activityFormularioProdutoImagemPreview.setImageURI(Uri.fromFile(File(it)))
+                binding.activityFormularioProdutoImagemPreview.setImageURI(Uri.parse(it))
             }
         }
     }

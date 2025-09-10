@@ -9,4 +9,7 @@
     <string name="salvar">Salvar</string>
     <string name="close">Close</string>
     <string name="take_photo">take_Photo</string>
+    <string name="retake">retake\n</string>
+    <string name="capture">capture</string>
+    <string name="confirm">confirm\n</string>
 </resources>
