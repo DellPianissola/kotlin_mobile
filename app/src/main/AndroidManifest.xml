@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Orgs">
 
-        <!-- FileProvider necessário para salvar fotos da câmera -->
+        <!-- FileProvider necessário se quiser salvar fotos e compartilhar -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -37,6 +37,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.CameraActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Orgs" />
 
     </application>
 
