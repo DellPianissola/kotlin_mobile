@@ -11,9 +11,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -33,25 +31,21 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var confirmButton: ImageButton
     private lateinit var retakeButton: ImageButton
 
-    private lateinit var imageCapture: ImageCapture
+    private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-    private lateinit var photoFile: File
+    private var photoFile: File? = null
 
     companion object {
         const val RESULT_URI = "RESULT_URI"
         private const val TAG = "CameraActivity"
     }
 
+    // Launcher para pedir permissão
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) {
-            startCameraInternal()
-        } else {
-            setResult(Activity.RESULT_CANCELED)
-            finish()
-        }
+        if (granted) startCamera() else cancelAndClose()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +53,17 @@ class CameraActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(R.layout.activity_camera)
 
+        setupUI()
+        setupListeners()
+
+        outputDirectory = getOutputDirectory()
+        cameraExecutor = Executors.newSingleThreadExecutor()
+
+        handlePermissions()
+    }
+
+    /** Inicializa os componentes visuais */
+    private fun setupUI() {
         previewView = findViewById(R.id.CameraPreview)
         previewImage = findViewById(R.id.previewImage)
         captureButton = findViewById(R.id.captureButton)
@@ -66,83 +71,84 @@ class CameraActivity : AppCompatActivity() {
         confirmButton = findViewById(R.id.confirmButton)
         retakeButton = findViewById(R.id.retakeButton)
 
-        outputDirectory = getOutputDirectory()
-        cameraExecutor = Executors.newSingleThreadExecutor()
+        showCameraUI()
+    }
 
+    /** Configura os cliques dos botões */
+    private fun setupListeners() {
         captureButton.setOnClickListener {
             captureButton.isEnabled = false
             takePhoto()
         }
 
-        closeButton.setOnClickListener {
-            setResult(Activity.RESULT_CANCELED)
-            finish()
-        }
+        closeButton.setOnClickListener { cancelAndClose() }
 
         confirmButton.setOnClickListener {
-            val intent = Intent().apply {
-                putExtra(RESULT_URI, photoFile.absolutePath)
+            photoFile?.let {
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(RESULT_URI, it.absolutePath)
+                })
             }
-            setResult(Activity.RESULT_OK, intent)
             finish()
         }
 
         retakeButton.setOnClickListener {
-            // Deleta arquivo temporário se existir
-            if (::photoFile.isInitialized && photoFile.exists()) {
-                photoFile.delete()
-            }
-            previewImage.setImageDrawable(null)
-            previewImage.visibility = View.GONE
-            previewView.visibility = View.VISIBLE
-            captureButton.visibility = View.VISIBLE
-            confirmButton.visibility = View.GONE
-            retakeButton.visibility = View.GONE
-
-            // (re)inicia câmera se necessário
-            startCameraInternal()
+            deleteTempPhoto()
+            showCameraUI()
+            startCamera()
         }
+    }
 
-        // Verifica permissão de câmera
+    /** Verifica permissão da câmera */
+    private fun handlePermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            startCameraInternal()
+            == android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            startCamera()
         } else {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
-    private fun startCameraInternal() {
+    /** Inicia a câmera */
+    private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder()
-                .build()
-                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+            val preview = Preview.Builder().build().apply {
+                setSurfaceProvider(previewView.surfaceProvider)
+            }
 
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build()
 
-            val cameraSelector = androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch (exc: Exception) {
-                Log.e(TAG, "Erro ao bind camera", exc)
+                Log.e(TAG, "Erro ao iniciar câmera", exc)
             }
         }, ContextCompat.getMainExecutor(this))
     }
 
+    /** Captura a foto */
     private fun takePhoto() {
+        val imageCapture = imageCapture ?: return
+
         val fileName = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
             .format(System.currentTimeMillis()) + ".jpg"
         photoFile = File(outputDirectory, fileName)
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this),
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile!!).build()
+
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Erro ao salvar imagem: ${exc.message}", exc)
@@ -150,24 +156,51 @@ class CameraActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    // mostra preview e troca botões
-                    previewView.visibility = View.GONE
-                    previewImage.visibility = View.VISIBLE
+                    showPreviewUI()
                     previewImage.setImageURI(Uri.fromFile(photoFile))
-
-                    captureButton.visibility = View.GONE
-                    confirmButton.visibility = View.VISIBLE
-                    retakeButton.visibility = View.VISIBLE
                     captureButton.isEnabled = true
                 }
             })
     }
 
+    /** Mostra UI da câmera */
+    private fun showCameraUI() {
+        previewView.visibility = View.VISIBLE
+        previewImage.visibility = View.GONE
+
+        captureButton.visibility = View.VISIBLE
+        confirmButton.visibility = View.GONE
+        retakeButton.visibility = View.GONE
+    }
+
+    /** Mostra UI do preview */
+    private fun showPreviewUI() {
+        previewView.visibility = View.GONE
+        previewImage.visibility = View.VISIBLE
+
+        captureButton.visibility = View.GONE
+        confirmButton.visibility = View.VISIBLE
+        retakeButton.visibility = View.VISIBLE
+    }
+
+    /** Deleta foto temporária */
+    private fun deleteTempPhoto() {
+        photoFile?.takeIf { it.exists() }?.delete()
+        photoFile = null
+    }
+
+    /** Cancela e fecha a activity */
+    private fun cancelAndClose() {
+        setResult(Activity.RESULT_CANCELED)
+        finish()
+    }
+
+    /** Retorna o diretório de saída das fotos */
     private fun getOutputDirectory(): File {
         val mediaDir = externalMediaDirs.firstOrNull()?.let {
             File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
         }
-        return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
+        return mediaDir?.takeIf { it.exists() } ?: filesDir
     }
 
     override fun onDestroy() {
