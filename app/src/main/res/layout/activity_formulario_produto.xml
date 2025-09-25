@@ -72,9 +72,10 @@
         <ImageView
             android:id="@+id/activity_formulario_produto_imagem_preview"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             android:contentDescription="@string/produto_imagem"
             android:background="@color/black"
             app:layout_constraintTop_toBottomOf="@id/layout_valor"

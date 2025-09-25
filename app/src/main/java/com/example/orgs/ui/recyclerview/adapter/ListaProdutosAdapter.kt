@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.orgs.databinding.ProdutoItemBinding
 import com.example.orgs.module.Produto
 
-class ListaProdutosAdapter :
-    ListAdapter<Produto, ListaProdutosAdapter.ViewHolder>(DIFF_CALLBACK) {
+class ListaProdutosAdapter(
+    private val onItemClick: (Produto) -> Unit // callback de clique
+) : ListAdapter<Produto, ListaProdutosAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Produto>() {
@@ -29,7 +30,7 @@ class ListaProdutosAdapter :
         }
     }
 
-    class ViewHolder(private val binding: ProdutoItemBinding) :
+    inner class ViewHolder(private val binding: ProdutoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun vincula(produto: Produto) = with(binding) {
@@ -42,6 +43,11 @@ class ListaProdutosAdapter :
                 produtoItemImageView.setImageURI(Uri.parse(produto.imagemUri))
             } else {
                 produtoItemImageView.setImageResource(android.R.color.transparent)
+            }
+
+            // clique no card
+            root.setOnClickListener {
+                onItemClick(produto)
             }
         }
     }

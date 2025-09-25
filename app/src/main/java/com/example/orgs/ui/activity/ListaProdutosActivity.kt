@@ -5,13 +5,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.databinding.ActivityListProdutosBinding
+import com.example.orgs.module.Produto
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
     private val dao by lazy { ProdutosDao() }
-    private val adapter by lazy { ListaProdutosAdapter() }
     private val binding by lazy { ActivityListProdutosBinding.inflate(layoutInflater) }
+
+    // Passa lambda para o adapter com o clique no item
+    private val adapter by lazy {
+        ListaProdutosAdapter { produto ->
+            vaiParaDetalhesProduto(produto)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,5 +36,12 @@ class ListaProdutosActivity : AppCompatActivity() {
 
     private fun vaiParaFormularioProduto() {
         startActivity(Intent(this, FormularioProdutoActivity::class.java))
+    }
+
+    private fun vaiParaDetalhesProduto(produto: Produto) {
+        val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+            putExtra("produto_id", produto.id)
+        }
+        startActivity(intent)
     }
 }
