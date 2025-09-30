@@ -174,7 +174,7 @@ class CameraActivity : AppCompatActivity() {
         retakeButton.visibility = View.GONE
     }
 
-    /** Mostra UI do preview */
+    /** Mostra UI do preview TESTE 2*/
     private fun showPreviewUI() {
         previewView.visibility = View.GONE
         previewImage.visibility = View.VISIBLE
@@ -184,7 +184,7 @@ class CameraActivity : AppCompatActivity() {
         retakeButton.visibility = View.VISIBLE
     }
 
-    /** Deleta foto temporária */
+    /** Deleta foto temporária TESTE 2*/
     private fun deleteTempPhoto() {
         photoFile?.takeIf { it.exists() }?.delete()
         photoFile = null
